@@ -3,9 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import moment from 'moment';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
-import Script from 'react-load-script'
-import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan } from 'revalidate';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import Script from 'react-load-script';
+import {
+  composeValidators,
+  combineValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from 'revalidate';
 import cuid from 'cuid';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
 import { createEvent, updateEvent } from '../eventActions';
@@ -55,17 +60,16 @@ const validate = combineValidators({
   date: isRequired('date')
 });
 
-
 class EventForm extends Component {
   state = {
     cityLatLng: {},
     venueLatLng: {},
     scriptLoaded: false
-  }
+  };
 
   handleScriptLoaded = () => this.setState({ scriptLoaded: true });
 
-  handleCitySelect = (selectedCity) => {
+  handleCitySelect = selectedCity => {
     geocodeByAddress(selectedCity)
       .then(results => getLatLng(results[0]))
       .then(latlng => {
@@ -74,11 +78,11 @@ class EventForm extends Component {
         });
       })
       .then(() => {
-        this.props.change('city', selectedCity)
-      })
+        this.props.change('city', selectedCity);
+      });
   };
 
-  handleVenueSelect = (selectedVenue) => {
+  handleVenueSelect = selectedVenue => {
     geocodeByAddress(selectedVenue)
       .then(results => getLatLng(results[0]))
       .then(latlng => {
@@ -87,37 +91,9 @@ class EventForm extends Component {
         });
       })
       .then(() => {
-        this.props.change('venue', selectedVenue)
-      })
-  }
-
-  /*
-  state = {
-     // cloning object, rather than changing the event that is in state
-     event: Object.assign({}, this.props.event)
-     //selectedEvent: null
-   };
- 
-  // if selected event being passed in
-  componentDidMount() {
-    if (this.props.selectedEvent !== null) {
-      this.setState({
-        event: this.props.selectedEvent
+        this.props.change('venue', selectedVenue);
       });
-    }
-  }
-
-  // change the event by clicking on a button or create the event
-  componentWillReceiveProps(nextProps) {
-    console.log('current props', this.props.selectedEvent);
-    console.log('next props', nextProps.selectedEvent);
-    if (nextProps.selectedEvent !== this.props.selectedEvent) {
-      this.setState({
-        event: nextProps.selectedEvent || emptyEvent
-      });
-    }
-  }
-  */
+  };
 
   onFormSubmit = values => {
     values.date = moment(values.date).format();
@@ -141,25 +117,12 @@ class EventForm extends Component {
     }
   };
 
-  /*
-  onInputChange = evt => {
-    const newEvent = this.state.event;
-    // target the name[title, date, etc.] properties and enter info on form
-    newEvent[evt.target.name] = evt.target.value;
-    this.setState({
-      event: newEvent
-    });
-  };
-  */
-
   render() {
     const { invalid, submitting, pristine } = this.props;
-    // const { handleCancel } = this.props;
-    // const { event } = this.state;
     return (
       <Grid>
         <Script
-          url='https://maps.googleapis.com/maps/api/js?key=AIzaSyBoKrBqbiQydML5In7HOFUu3T1BwwDxrXQ&libraries=places'
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoKrBqbiQydML5In7HOFUu3T1BwwDxrXQ&libraries=places"
           onLoad={this.handleScriptLoaded}
         />
         <Grid.Column width={10}>
@@ -199,7 +162,7 @@ class EventForm extends Component {
                 onSelect={this.handleCitySelect}
               />
 
-              {this.state.scriptLoaded &&
+              {this.state.scriptLoaded && (
                 <Field
                   name="venue"
                   type="text"
@@ -211,7 +174,8 @@ class EventForm extends Component {
                   }}
                   placeholder="Event Venue"
                   onSelect={this.handleVenueSelect}
-                />}
+                />
+              )}
 
               <Field
                 name="date"

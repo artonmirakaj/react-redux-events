@@ -11,7 +11,6 @@ class EventList extends Component {
             <EventListItem
               key={event.id}
               event={event}
-              // onEventOpen={onEventOpen}
               deleteEvent={deleteEvent}
             />
           ))}
